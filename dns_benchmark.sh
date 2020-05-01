@@ -7,7 +7,7 @@ mindns=""
 for DNS in $(cat $1)
 do
 start=$(($(date +%s%N)/1000000))
-nslookup gmail.com $DNS >> /dev/null
+nslookup github.com $DNS >> /dev/null
 end=$(($(date +%s%N)/1000000))
 
 runtime=$((end-start ))
