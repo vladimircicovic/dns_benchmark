@@ -1,25 +1,22 @@
-#!/bin/bash
+#!/bin/sh
 
-declare -a dnstime
+mintime='99999999999'
+mindns=''
 
-mintime=99999999999
-mindns=""
-for DNS in $(cat $1)
-do
-start=$(($(date +%s%N)/1000000))
-nslookup github.com $DNS >> /dev/null
-end=$(($(date +%s%N)/1000000))
+input="$1"
 
-runtime=$((end-start ))
-echo $DNS $runtime ms
-if [ "$runtime" -le "$mintime" ]; then
+while read -r DNS; do
+	start="$(($(date +%s%N)/1000000))"
+	nslookup github.com "$DNS" >> /dev/null
+	end="$(($(date +%s%N)/1000000))"
 
- mintime=$runtime
- mindns=$DNS
-fi
-done
+	runtime="$((end-start))"
+	echo "$DNS $runtime ms"
 
+	if [ "$runtime" -le "$mintime" ]; then
+		mintime="$runtime"
+		mindns="$DNS"
+	fi
+done < "$input"
 
 echo "Fast response: $mintime from $mindns"
-
-
